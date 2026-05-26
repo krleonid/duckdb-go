@@ -19,10 +19,10 @@ func (vec *vector) getNull(rowIdx mapping.IdxT) bool {
 	if vec.maskPtr == nil {
 		return false
 	}
-	entryIdx := uint64(rowIdx) / 64                                   // which uint64 word holds this row's bit
-	idxInEntry := uint64(rowIdx) % 64                                 // which bit position within that word (0-63)
-	mask := *(*uint64)(unsafe.Add(vec.maskPtr, entryIdx*8))           // read the word at byte offset entryIdx*8
-	return mask&(1<<idxInEntry) == 0                                  // 0 = null, 1 = valid
+	entryIdx := uint64(rowIdx) / 64                         // which uint64 word holds this row's bit
+	idxInEntry := uint64(rowIdx) % 64                       // which bit position within that word (0-63)
+	mask := *(*uint64)(unsafe.Add(vec.maskPtr, entryIdx*8)) // read the word at byte offset entryIdx*8
+	return mask&(1<<idxInEntry) == 0                        // 0 = null, 1 = valid
 }
 
 func getPrimitive[T any](vec *vector, rowIdx mapping.IdxT) T {
