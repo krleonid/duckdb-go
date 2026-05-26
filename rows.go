@@ -73,12 +73,9 @@ func (r *rows) Next(dst []driver.Value) error {
 		r.rowCount = 0
 	}
 
-	columnCount := len(r.chunk.columns)
-	for colIdx := range columnCount {
-		var err error
-		if dst[colIdx], err = r.chunk.GetValue(colIdx, r.rowCount); err != nil {
-			return err
-		}
+	rowIdx := mapping.IdxT(r.rowCount)
+	for colIdx := range r.chunk.columns {
+		dst[colIdx] = r.chunk.columns[colIdx].getFn(&r.chunk.columns[colIdx], rowIdx)
 	}
 	r.rowCount++
 
